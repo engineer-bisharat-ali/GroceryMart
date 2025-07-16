@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_mart/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/product_provider.dart';
@@ -17,17 +18,19 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grocery Home'),
+        title: const Text('Grocery Mart'),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: TextField(
-             
+              style: const TextStyle(fontSize: 16),
               decoration: InputDecoration(
                 hintText: 'Search products...',
                 prefixIcon: const Icon(Icons.search),
@@ -168,10 +171,22 @@ class _HomeState extends State<Home> {
                   color: Colors.green.shade400,
                   borderRadius: BorderRadius.circular(screenWidth * 0.04),
                 ),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: screenWidth * 0.055,
+                child: GestureDetector(
+                  onTap: () {
+                    // Add product to cart
+                    Provider.of<CartProvider>(context, listen: false)
+                        .addToCart(product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${product.name} added to cart!'),
+                      ),
+                    );
+                  },
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: screenWidth * 0.055,
+                  ),
                 ),
               ),
             ],

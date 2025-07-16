@@ -133,6 +133,7 @@ class SampleProducts{
     ];
   }
 
+
     // get featured products
     static List<Product> getFeaturedProducts() {
       final products = getproduct();
@@ -144,4 +145,6 @@ class SampleProducts{
       products[13], // Bread
       ];
     }
+
+
 }

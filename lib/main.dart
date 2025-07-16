@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_mart/Screen/cart_screen.dart';
+import 'package:grocery_mart/Screen/categories_screen.dart';
 import 'package:grocery_mart/Screen/home.dart';
 import 'package:grocery_mart/Screen/splash_screen.dart';
+import 'package:grocery_mart/providers/cart_provider.dart';
 import 'package:grocery_mart/providers/product_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'providers/category_provider.dart';
 
 void main() {
   runApp(
     // multiprovider is used to provide the ProductProvider to the widget tree
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ProductProvider()..loadProducts()),
+        // providers for managing state
+        ChangeNotifierProvider(create: (_) => ProductProvider()..loadProducts()), // Load products when the app starts
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()..loadCategories()), // Load categories when the app starts
       ],
       child: const MyApp(),
     ),
@@ -51,8 +59,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const Home(),
-    const Placeholder(),
-    const Placeholder(),
+    const CartScreen(),
+    const CategoriesScreen(),
+    
   ];
 
   @override
@@ -71,13 +80,14 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
+         
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Cart',
+          ),
+           BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
           ),
         ],
       ),
