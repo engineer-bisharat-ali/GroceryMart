@@ -6,18 +6,29 @@ import 'package:grocery_mart/Screen/splash_screen.dart';
 import 'package:grocery_mart/providers/cart_provider.dart';
 import 'package:grocery_mart/providers/product_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'providers/category_provider.dart';
 
-void main() {
+void main() async {
+  // This is required to initialize plugins like SharedPreferences before runApp
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
-    // multiprovider is used to provide the ProductProvider to the widget tree
     MultiProvider(
       providers: [
-        // providers for managing state
-        ChangeNotifierProvider(create: (_) => ProductProvider()..loadProducts()), // Load products when the app starts
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-        ChangeNotifierProvider(create: (_) => CategoryProvider()..loadCategories()), // Load categories when the app starts
+        // Load products when app starts
+        ChangeNotifierProvider(
+          create: (_) => ProductProvider()..loadProducts(),
+        ),
+
+        // Load cart from SharedPreferences
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+
+        // Load categories when app starts
+        ChangeNotifierProvider(
+          create: (_) => CategoryProvider()..loadCategories(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -27,25 +38,27 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Grocery Mart',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      debugShowCheckedModeBanner: false,
+
+      // Start app with splash screen
       home: const SplashScreen(),
+
+      // Define named routes
       routes: {
-          '/home': (context) => const Home(),
-          '/bottom_navigation': (context) => const MainScreen(),
+        '/home': (context) => const Home(),
+        '/bottom_navigation': (context) => const MainScreen(),
       },
     );
   }
 }
-
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -57,11 +70,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
+  // List of screens for each tab
   final List<Widget> _screens = [
     const Home(),
     const CartScreen(),
     const CategoriesScreen(),
-    
   ];
 
   @override
@@ -80,12 +93,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-         
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.explore),
             label: 'Explore',
           ),

@@ -34,7 +34,7 @@ class CartScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Image.asset(
                 item.image,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.shopping_basket, color: Colors.grey);
                 },
